@@ -639,6 +639,9 @@ export default function SortingVisualizer() {
     const [maxValue, setMaxValue] = useState<number>(100);
     const [sortingSpeed, setSortingSpeed] = useState<number>(50);
     const [isSorting, setIsSorting] = useState<boolean>(false);
+
+    // Convert slider value to actual speed (higher slider value = slower speed)
+    const getActualSpeed = () => Math.max(10, 110 - sortingSpeed);
     const [currentAlgorithm, setCurrentAlgorithm] = useState<SortingAlgorithm | null>(null);
     const [stats, setStats] = useState<Record<SortingAlgorithm, SortingStats>>({
         quick: { comparisons: 0, swaps: 0, duration: 0 },
@@ -672,16 +675,16 @@ export default function SortingVisualizer() {
         // Apply the selected sorting algorithm
         switch (algorithm) {
             case "quick":
-                sortedArray = await quickSort([...originalArray], setArray, setStats, sortingSpeed);
+                sortedArray = await quickSort([...originalArray], setArray, setStats, getActualSpeed());
                 break;
             case "heap":
-                sortedArray = await heapSort([...originalArray], setArray, setStats, sortingSpeed);
+                sortedArray = await heapSort([...originalArray], setArray, setStats, getActualSpeed());
                 break;
             case "smooth":
-                sortedArray = await smoothSort([...originalArray], setArray, setStats, sortingSpeed);
+                sortedArray = await smoothSort([...originalArray], setArray, setStats, getActualSpeed());
                 break;
             case "intro":
-                sortedArray = await introSort([...originalArray], setArray, setStats, sortingSpeed);
+                sortedArray = await introSort([...originalArray], setArray, setStats, getActualSpeed());
                 break;
         }
 
@@ -733,7 +736,7 @@ export default function SortingVisualizer() {
                         value={minValue}
                         onChange={(e) => !isSorting && setMinValue(Number(e.target.value))}
                         disabled={isSorting}
-                        className="w-24 p-1 border rounded"
+                        className="w-24 p-1 border rounded bg-transparent"
                     />
                 </div>
 
@@ -746,7 +749,7 @@ export default function SortingVisualizer() {
                         value={maxValue}
                         onChange={(e) => !isSorting && setMaxValue(Number(e.target.value))}
                         disabled={isSorting}
-                        className="w-24 p-1 border rounded"
+                        className="w-24 p-1 border rounded bg-transparent"
                     />
                 </div>
 
@@ -757,7 +760,7 @@ export default function SortingVisualizer() {
                         min="1"
                         max="100"
                         value={sortingSpeed}
-                        onChange={(e) => setSortingSpeed(101 - Number(e.target.value))}
+                        onChange={(e) => setSortingSpeed(Number(e.target.value))}
                         className="w-full"
                     />
                     <span className="text-sm">{sortingSpeed}%</span>
