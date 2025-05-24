@@ -47,7 +47,7 @@ export default function SortingVisualizer() {
     const [arraySize, setArraySize] = useState<number>(30);
     const [minValue, setMinValue] = useState<number>(5);
     const [maxValue, setMaxValue] = useState<number>(100);
-    const [sortingSpeed, setSortingSpeed] = useState<number>(50);
+    const [sortingSpeed, setSortingSpeed] = useState<number>(80);
     const [isSorting, setIsSorting] = useState<boolean>(false);
     const [currentAlgorithm, setCurrentAlgorithm] = useState<string | null>(null);
     const [stats, setStats] = useState<Record<string, SortingStats>>({
@@ -59,8 +59,20 @@ export default function SortingVisualizer() {
 
     const getActualSpeed = () => Math.max(10, 110 - sortingSpeed);
 
+    const validateValues = () => {
+        if (minValue >= maxValue) {
+            alert("Min value has to be less than max value");
+            return false;
+        }
+        if (minValue > 1_000_000 || maxValue > 1_000_000) {
+            alert("Values have to be less than 1,000,000");
+            return false;
+        }
+        return true;
+    };
+
     const generateArray = () => {
-        if (isSorting) return;
+        if (isSorting || !validateValues()) return;
         const newArray = generateRandomArray(arraySize, minValue, maxValue);
         setArray(newArray);
         setOriginalArray([...newArray]);
@@ -68,7 +80,7 @@ export default function SortingVisualizer() {
     };
 
     const startSorting = async (algorithm: string) => {
-        if (isSorting) return;
+        if (isSorting || !validateValues()) return;
 
         setIsSorting(true);
         setCurrentAlgorithm(algorithm);
@@ -97,7 +109,7 @@ export default function SortingVisualizer() {
         generateArray();
     }, []);
 
-    const maxArrayValue = Math.max(...array.map(item => item.value));
+    const maxArrayValue = Math.max(...array.map(item => item.value), 1);
 
     const algorithms = [
         { key: "quick", name: "Quick Sort" },
@@ -162,7 +174,7 @@ export default function SortingVisualizer() {
                   <input
                     type="number"
                     min={minValue + 1}
-                    max="1000"
+                    max="1000000"
                     value={maxValue}
                     onChange={(e) => !isSorting && setMaxValue(Number(e.target.value))}
                     disabled={isSorting}
