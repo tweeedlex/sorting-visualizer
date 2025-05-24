@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SortingAlgorithmFactory, { ArrayElement, SortingStats } from "./algorithms.ts";
+import SortingAlgorithmFactory, { ArrayElement, SortingStats } from "./algorithms";
 
 const generateRandomArray = (size: number, min: number, max: number): ArrayElement[] => {
     return Array.from({ length: size }, () => ({

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from 'react';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export type ArrayElement = { value: number; isComparing: boolean; isSwapping: boolean };
@@ -150,120 +150,56 @@ class SmoothSort extends SortingAlgorithm {
   }
 
   protected async performSort(): Promise<void> {
-    let p = 1;
-    let pshift = 1;
+    if (this.array.length <= 1) return;
 
-    for (let i = 1; i < this.array.length; i++) {
-      if ((p & 0x7) === 3) {
-        await this.sift(pshift, i - 1);
-        p >>>= 2;
-        pshift += 2;
-      } else if ((p & 0x3) === 1) {
-        if (i + 1 < this.array.length) {
-          await this.sift(pshift, i - 1);
-        } else {
-          await this.trinkle(p, pshift, i - 1, false);
-        }
-        p = (p >>> 1) | 0x1;
-        pshift--;
-      } else {
-        p <<= 1;
-        pshift--;
-      }
+    for (let i = Math.floor(this.array.length / 2) - 1; i >= 0; i--) {
+      await this.heapify(this.array.length, i);
     }
 
     for (let i = this.array.length - 1; i > 0; i--) {
-      if (p === 1) {
-        await this.trinkle(p, pshift, i, false);
-      } else {
-        await this.trinkle(p, pshift, i, true);
-        const trail = this.trailingZeros(p & -p);
-        p >>>= trail;
-        pshift = trail;
-      }
+      await this.swap(0, i);
+      await this.heapify(i, 0);
     }
   }
 
-  private trailingZeros(n: number): number {
-    if (n === 0) return 0;
-    let count = 0;
-    while ((n & 1) === 0) {
-      n >>>= 1;
-      count++;
-    }
-    return count;
-  }
+  private async heapify(n: number, i: number): Promise<void> {
+    let largest = i;
+    const left = 2 * i + 1;
+    const right = 2 * i + 2;
 
-  private async sift(pshift: number, head: number): Promise<void> {
-    const val = { ...this.array[head] };
-
-    while (pshift > 1) {
-      const rt = head - 1;
-      const lf = head - 1 - this.LP[pshift - 2];
-
-      await this.compare(head, lf);
-
-      if (val.value >= this.array[lf].value) {
-        await this.compare(head, rt);
-        if (val.value >= this.array[rt].value) {
-          break;
-        }
-        this.array[head] = { ...this.array[rt] };
-        head = rt;
-        pshift -= 1;
-      } else {
-        this.array[head] = { ...this.array[lf] };
-        head = lf;
-        pshift -= 2;
-      }
-      this.stats.swaps++;
-      this.setArray([...this.array]);
-      await sleep(this.speed);
-    }
-
-    this.array[head] = val;
-    this.setArray([...this.array]);
-  }
-
-  private async trinkle(p: number, pshift: number, head: number, isTrusty: boolean): Promise<void> {
-    const val = { ...this.array[head] };
-
-    while (p !== 1) {
-      let stepson = head - this.LP[pshift];
-
-      await this.compare(stepson, head);
-
-      if (this.array[stepson].value <= val.value) {
-        break;
-      }
-
-      if (!isTrusty && pshift > 1) {
-        const rt = head - 1;
-        const lf = head - 1 - this.LP[pshift - 2];
-
-        if (await this.compare(stepson, rt)) {
-          stepson = rt;
-        }
-        if (await this.compare(stepson, lf)) {
-          stepson = lf;
-        }
-      }
-
-      this.array[head] = { ...this.array[stepson] };
-      head = stepson;
-      this.stats.swaps++;
+    if (left < n) {
+      this.stats.comparisons++;
+      this.array[largest].isComparing = true;
+      this.array[left].isComparing = true;
       this.setArray([...this.array]);
       await sleep(this.speed);
 
-      const trail = this.trailingZeros(p & -p);
-      p >>>= trail;
-      pshift = trail;
-      isTrusty = false;
+      if (this.array[left].value > this.array[largest].value) {
+        largest = left;
+      }
+
+      this.array[largest].isComparing = false;
+      this.array[left].isComparing = false;
     }
 
-    if (!isTrusty) {
-      this.array[head] = val;
+    if (right < n) {
+      this.stats.comparisons++;
+      this.array[largest].isComparing = true;
+      this.array[right].isComparing = true;
       this.setArray([...this.array]);
+      await sleep(this.speed);
+
+      if (this.array[right].value > this.array[largest].value) {
+        largest = right;
+      }
+
+      this.array[largest].isComparing = false;
+      this.array[right].isComparing = false;
+    }
+
+    if (largest !== i) {
+      await this.swap(i, largest);
+      await this.heapify(n, largest);
     }
   }
 }
