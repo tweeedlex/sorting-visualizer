@@ -113,5 +113,4 @@ npm run test:watch
 - **Algorithm selection** with detailed information
 - **Responsive design** for desktop and mobile devices
 
-
-- [Live Demo](https://sorting-visualizer.tappers.tech/) - See the visualizer in action
+[Live Demo](https://sorting-visualizer.tappers.tech/) - See the visualizer in action
