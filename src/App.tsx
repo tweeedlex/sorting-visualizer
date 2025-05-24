@@ -1,5 +1,4 @@
 import {Routes, Route} from "react-router-dom";
-import routes from "./consts/pageRoutes.ts";
 import Main from "./pages/Main";
 
 function App() {
@@ -11,12 +10,9 @@ function App() {
     <div className={"App"}>
       <main>
         <Routes>
-          <Route path={routes.MAIN} element={<Main/>}/>
+          <Route path={"/"} element={<Main/>}/>
         </Routes>
       </main>
-
-
-      {/*<Footer />*/}
     </div>
   )
 }
