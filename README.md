@@ -13,13 +13,10 @@ An interactive sorting algorithms visualizer built with React and TypeScript. Th
 
 ## 🛠 Tech Stack
 
-### Frontend
 - **React 18** - Modern UI library
 - **TypeScript** - Type safety for reliable code
 - **Tailwind CSS** - Utility-first CSS framework
 - **Sass** - CSS preprocessor
-
-### Development Tools
 - **Vite** - Fast build tool and dev server
 - **ESLint** - Code linting and quality
 - **Jest** - Testing framework
@@ -28,8 +25,7 @@ An interactive sorting algorithms visualizer built with React and TypeScript. Th
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd frontend
+git clone https://github.com/tweeedlex/sorting-visualizer
 ```
 
 2. Install dependencies:
@@ -50,7 +46,6 @@ The application will be available at `http://localhost:5173`
 ```bash
 npm run dev          # Start development server
 npm run preview      # Preview production build
-npm run ngrok        # Expose local server via ngrok
 ```
 
 ### Building
@@ -118,32 +113,5 @@ npm run test:watch
 - **Algorithm selection** with detailed information
 - **Responsive design** for desktop and mobile devices
 
-## 🏗 Project Structure
 
-```
-src/
-├── components/          # Reusable UI components
-├── pages/              # Page components
-├── store/              # Redux store configuration
-├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-└── styles/             # Global styles and Sass files
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Commit your changes: `git commit -am 'Add new feature'`
-4. Push to the branch: `git push origin feature/new-feature`
-5. Submit a pull request
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🔗 Links
-
-- [Live Demo](#) - See the visualizer in action
-- [Documentation](#) - Detailed algorithm explanations
-- [Issues](https://github.com/your-repo/issues) - Report bugs or request features
+- [Live Demo](https://sorting-visualizer.tappers.tech/) - See the visualizer in action
